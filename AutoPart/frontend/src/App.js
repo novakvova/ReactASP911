@@ -10,7 +10,7 @@ class App extends React.Component {
       <>
        <Header/>
         <div className="container">
-          <h1>Hello --</h1>
+          <h1>Hello --++</h1>
           <h2>Вона зможе</h2>
         </div>
       </>
