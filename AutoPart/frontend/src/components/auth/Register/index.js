@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import authService from '../../../services/auth.service';
 import TextBoxField from '../../common/TextBoxField';
+
 
 export class RegisterPage extends Component {
 
@@ -18,18 +20,61 @@ export class RegisterPage extends Component {
         this.setState({[e.target.name]: e.target.value});
     }
 
+    onSubmitFormHandler = async (e) => {
+        e.preventDefault();
+        console.log("Посилаємо на сервер", this.state);
+        // authService.register(this.state)
+        //     .then(result=>{
+        //         console.log("Server is good ", result);
+        //     },
+        //     error => {
+        //         console.log("Server is bad ", error);
+        //     })
+        //     .catch(errorServer => {
+
+        //     });
+
+
+        try{
+            const result = await authService.register(this.state);
+            console.log("Server is good ", result);
+
+        }
+        catch(error) {
+            console.log("Server is bad ", error.response);
+        }
+    }
+
     render() {
-        console.log("state", this.state);
-        const {email, password} = this.state;
+        //console.log("state", this.state);
+        const { email, phone, firstName, secondName, password, confirmPassword} = this.state;
         return (
             <div className="row">
                 <div className="offset-md-3 col-md-6">
                 <h1 className="text-center">Реєстрація</h1>
-                <form>
+                <form onSubmit={this.onSubmitFormHandler}>
                     <TextBoxField 
                         field="email"
                         label="Електронна пошта"
                         value={email}
+                        onChangeHandler={this.onChangeHandler}/>
+
+                    <TextBoxField 
+                        field="phone"
+                        label="Телефон"
+                        value={phone}
+                        onChangeHandler={this.onChangeHandler}/>
+
+                    <TextBoxField 
+                        field="secondName"
+                        label="Прізвище"
+                        value={secondName}
+                        onChangeHandler={this.onChangeHandler}/>
+
+                    <TextBoxField 
+                        field="firstName"
+                        label="Ім'я"
+                        value={firstName}
                         onChangeHandler={this.onChangeHandler}/>
 
                     <TextBoxField 
@@ -39,7 +84,14 @@ export class RegisterPage extends Component {
                         value={password}
                         onChangeHandler={this.onChangeHandler}/>
 
+                    <TextBoxField 
+                        field="confirmPassword"
+                        type="password"
+                        label="Підтвердження пароль"
+                        value={confirmPassword}
+                        onChangeHandler={this.onChangeHandler}/>
                     
+                    <button type="submit" className="btn btn-primary">Реєстрація</button>
                 </form>
                 </div>
 
