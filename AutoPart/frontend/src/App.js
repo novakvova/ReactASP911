@@ -1,19 +1,34 @@
 import logo from './logo.svg';
 import './App.css';
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 import Header from './components/header';
+import RegisterPage from './components/auth/Register';
+import LoginPage from './components/auth/Login';
 
 class App extends React.Component {
 
   render() {
     return (
-      <>
-       <Header/>
+      <Router>
+        <Header />
         <div className="container">
-          <h1>Hello --++</h1>
-          <h2>Вона зможе</h2>
+          <Switch>
+            <Route exact path="/">
+              <LoginPage />
+            </Route>
+
+            <Route exact path="/register">
+              <RegisterPage />
+            </Route>
+
+          </Switch>
         </div>
-      </>
+      </Router>
     );
   }
 }
