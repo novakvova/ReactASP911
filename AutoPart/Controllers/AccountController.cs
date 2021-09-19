@@ -16,9 +16,9 @@ namespace AutoPart.Controllers
         [Route("register")]
         public IActionResult Register([FromBody] RegisterViewModel model)
         {
-            return BadRequest(new {
-                message="Такий користувач уже є!"
-            });
+            //return BadRequest(new {
+            //    message="Такий користувач уже є!"
+            //});
             return Ok();
         }
     }

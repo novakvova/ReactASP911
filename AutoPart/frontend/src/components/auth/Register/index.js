@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from "react-router-dom";
 import authService from '../../../services/auth.service';
 import TextBoxField from '../../common/TextBoxField';
 
@@ -38,7 +39,7 @@ export class RegisterPage extends Component {
         try{
             const result = await authService.register(this.state);
             console.log("Server is good ", result);
-
+            this.props.history.push("/");
         }
         catch(error) {
             console.log("Server is bad ", error.response);
@@ -100,4 +101,4 @@ export class RegisterPage extends Component {
     }
 }
 
-export default RegisterPage
+export default withRouter(RegisterPage)
