@@ -3,8 +3,11 @@ import { Formik, Form } from 'formik';
 import { useHistory } from "react-router-dom";
 import MyTextInput from '../../common/MyTextInput';
 import validationFields from './validation';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MyPhotoInput from '../../common/MyPhotoInput';
+import { RegisterUser } from '../../../actions/auth';
+import EclipseWidget from '../../common/eclipse';
+
 
 
 const RegisterPage = () => {
@@ -20,24 +23,35 @@ const RegisterPage = () => {
     }
     const history = useHistory();
     const dispatch = useDispatch();
+    const { loading } = useSelector(state => state.auth);
     const refFormik = useRef();
 
     const onSubmitHandler = async (values) => {
 
         try {
-            console.log("submit data ", values);
+            // console.log("submit data ", values);
 
-            console.log("Server submit file", JSON.stringify(
-                { 
-                  fileName: values.photo.name, 
-                  type: values.photo.type,
-                  size: `${values.photo.size} bytes`
-                }
-              ));
+            // console.log("Server submit file", JSON.stringify(
+            //     { 
+            //       fileName: values.photo.name, 
+            //       type: values.photo.type,
+            //       size: `${values.photo.size} bytes`
+            //     }
+            //   ));
+            // var formData = new FormData();
+            // formData.append("email", values.email);
+            // formData.append("password", values.password);
+            // formData.append("photo", values.photo);
 
-            //const result = await authService.register(values);
-            //console.log("Server is good ", result);
-            //dispatch({type: REGISTER, payload: values.email});
+            // const result = await authService.register(formData);
+            // console.log("Server is good ", result);
+            // dispatch({type: REGISTER, payload: values.email});
+            // history.push("/");
+            
+            const formData = new FormData();
+            Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+            dispatch(RegisterUser(formData));
+            //const result =  await dispatch(RegisterUser(formData));
             //history.push("/");
         }
         catch (error) {
@@ -101,6 +115,7 @@ const RegisterPage = () => {
                 </Formik>
             </div>
 
+            {loading && <EclipseWidget />}
         </div>
     )
 }
