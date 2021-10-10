@@ -1,11 +1,10 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import { Formik, Form } from 'formik';
 import { useHistory } from "react-router-dom";
-import authService from '../../../services/auth.service';
 import MyTextInput from '../../common/MyTextInput';
 import validationFields from './validation';
 import { useDispatch } from 'react-redux';
-import { REGISTER } from '../../../constants/actionTypes';
+import MyPhotoInput from '../../common/MyPhotoInput';
 
 
 const RegisterPage = () => {
@@ -15,19 +14,31 @@ const RegisterPage = () => {
         phone: '',
         firstName: '',
         secondName: '',
+        photo: null,
         password: '',
         confirmPassword: ''
     }
     const history = useHistory();
     const dispatch = useDispatch();
+    const refFormik = useRef();
 
     const onSubmitHandler = async (values) => {
 
         try {
-            const result = await authService.register(values);
-            console.log("Server is good ", result);
-            dispatch({type: REGISTER, payload: values.email});
-            history.push("/");
+            console.log("submit data ", values);
+
+            console.log("Server submit file", JSON.stringify(
+                { 
+                  fileName: values.photo.name, 
+                  type: values.photo.type,
+                  size: `${values.photo.size} bytes`
+                }
+              ));
+
+            //const result = await authService.register(values);
+            //console.log("Server is good ", result);
+            //dispatch({type: REGISTER, payload: values.email});
+            //history.push("/");
         }
         catch (error) {
             console.log("Server is bad ", error.response);
@@ -39,6 +50,7 @@ const RegisterPage = () => {
             <div className="offset-md-3 col-md-6">
                 <h1 className="text-center">Реєстрація</h1>
                 <Formik
+                    innerRef = {refFormik}
                     initialValues={initState}
                     validationSchema={validationFields()}
                     onSubmit={onSubmitHandler}
@@ -67,6 +79,10 @@ const RegisterPage = () => {
                             name="firstName" 
                             id="firstName"
                             type="text" />
+                        
+                        <MyPhotoInput 
+                            refFormik={refFormik}
+                            field="photo" />
 
                         <MyTextInput
                             label="Пароль"
