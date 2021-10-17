@@ -1,9 +1,10 @@
-import { LOGIN, REGISTER, REGISTER_BEGIN } from "../constants/actionTypes";
+import { LOGIN, REGISTER, REGISTER_BEGIN, REGISTER_FAILED } from "../constants/actionTypes";
 
 const initialState ={
     isAuth: false,
     username: "",
-    loading: false
+    loading: false,
+    errors: {}
 }
 
 const authReducer = (state = initialState, action) => {
@@ -13,6 +14,13 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: true
+            }
+        }
+        case REGISTER_FAILED: {
+            return {
+                ...state,
+                loading: false,
+
             }
         }
         case REGISTER:

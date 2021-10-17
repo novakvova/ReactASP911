@@ -1,5 +1,5 @@
 import authService from "../services/auth.service";
-import { REGISTER, REGISTER_BEGIN } from "../constants/actionTypes";
+import { REGISTER, REGISTER_BEGIN, REGISTER_FAILED } from "../constants/actionTypes";
 import { push } from "connected-react-router";
 //import { useHistory } from "react-router-dom";
 
@@ -15,6 +15,7 @@ export const RegisterUser = (model) => async (dispatch) => {
         
     }
     catch(err) {
+        dispatch({type: REGISTER_FAILED});
         console.log("Propblem register");
         //return Promise.reject(err);
     }
