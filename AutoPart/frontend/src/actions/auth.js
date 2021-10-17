@@ -3,20 +3,24 @@ import { REGISTER, REGISTER_BEGIN, REGISTER_FAILED } from "../constants/actionTy
 import { push } from "connected-react-router";
 //import { useHistory } from "react-router-dom";
 
-export const RegisterUser = (model) => async (dispatch) => {
+export const RegisterUser = (model, setErrors) => async (dispatch) => {
     //const history = useHistory();
 
     try {
         dispatch({type: REGISTER_BEGIN});
         const result = await authService.register(model);
+        console.log("register reuslt", result);
         dispatch({type: REGISTER, payload: model.email});
         dispatch(push("/"));
         //return Promise.resolve(result);
         
     }
     catch(err) {
-        dispatch({type: REGISTER_FAILED});
-        console.log("Propblem register");
-        //return Promise.reject(err);
+        const {data} = err.response;
+        console.log("register error", );
+        dispatch({type: REGISTER_FAILED, payload: data.errors});
+        setErrors(data.errors);
+        //console.log("Propblem register");
+        //return Promise.reject();
     }
 }

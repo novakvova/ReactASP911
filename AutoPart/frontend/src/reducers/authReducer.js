@@ -20,6 +20,7 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
+                errors: payload
 
             }
         }
@@ -31,8 +32,11 @@ const authReducer = (state = initialState, action) => {
                 loading: false
             };
         } 
+        default: {
+            return state;
+        }
     }
-    return state;
+    
 
 }
 

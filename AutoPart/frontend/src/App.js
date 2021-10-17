@@ -1,8 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
-import React, {Suspense} from 'react';
+import React from 'react';
 import {
-  BrowserRouter as Router,
   Switch,
   Route
 } from "react-router";

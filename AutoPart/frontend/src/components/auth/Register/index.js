@@ -1,6 +1,6 @@
 import React, {useRef} from 'react'
 import { Formik, Form } from 'formik';
-import { useHistory } from "react-router-dom";
+//import { useHistory } from "react-router-dom";
 import MyTextInput from '../../common/MyTextInput';
 import validationFields from './validation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,13 +21,14 @@ const RegisterPage = () => {
         password: '',
         confirmPassword: ''
     }
-    const history = useHistory();
+    //const history = useHistory();
     const dispatch = useDispatch();
-    const { loading } = useSelector(state => state.auth);
+    const { loading, errors } = useSelector(state => state.auth);
     const refFormik = useRef();
 
-    const onSubmitHandler = async (values) => {
+    const onSubmitHandler = async (values, {setErrors}) => {
 
+        console.log("errors", errors);
         try {
             // console.log("submit data ", values);
 
@@ -50,16 +51,19 @@ const RegisterPage = () => {
             
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => formData.append(key, value));
-            dispatch(RegisterUser(formData));
+            console.log("setError");
+            await dispatch(RegisterUser(formData, setErrors));
+            
             //const result =  await dispatch(RegisterUser(formData));
             //history.push("/");
         }
         catch (error) {
-            console.log("Server is bad ", error.response);
+            console.log("Server is bad register from", errors);
         }
     }
 
     return (
+        
         <div className="row">
             <div className="offset-md-3 col-md-6">
                 <h1 className="text-center">Реєстрація</h1>
