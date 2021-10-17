@@ -19,7 +19,7 @@ export const RegisterUser = (model, setErrors) => async (dispatch) => {
         const {data} = err.response;
         console.log("register error", );
         dispatch({type: REGISTER_FAILED, payload: data.errors});
-        setErrors(data.errors);
+        setErrors({"Email": "not is valid"} );
         //console.log("Propblem register");
         //return Promise.reject();
     }
