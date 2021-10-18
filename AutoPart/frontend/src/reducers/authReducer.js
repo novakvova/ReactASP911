@@ -3,8 +3,7 @@ import { LOGIN, REGISTER, REGISTER_BEGIN, REGISTER_FAILED } from "../constants/a
 const initialState ={
     isAuth: false,
     username: "",
-    loading: false,
-    errors: {}
+    loading: false
 }
 
 const authReducer = (state = initialState, action) => {
@@ -19,8 +18,7 @@ const authReducer = (state = initialState, action) => {
         case REGISTER_FAILED: {
             return {
                 ...state,
-                loading: false,
-                errors: payload
+                loading: false
 
             }
         }

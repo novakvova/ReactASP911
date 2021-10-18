@@ -31,51 +31,22 @@ const RegisterPage = () => {
     const onSubmitHandler = async (values) => {
 
         console.log("errors", errors);
-        try {
-            // console.log("submit data ", values);
-
-            // console.log("Server submit file", JSON.stringify(
-            //     { 
-            //       fileName: values.photo.name, 
-            //       type: values.photo.type,
-            //       size: `${values.photo.size} bytes`
-            //     }
-            //   ));
-            // var formData = new FormData();
-            // formData.append("email", values.email);
-            // formData.append("password", values.password);
-            // formData.append("photo", values.photo);
-
-            // const result = await authService.register(formData);
-            // console.log("Server is good ", result);
-            // dispatch({type: REGISTER, payload: values.email});
-            // history.push("/");
-            
+        try {            
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => formData.append(key, value));
-            console.log("setError");
             dispatch(RegisterUser(formData))
                 .then(result => {
                     dispatch(push("/"));
-                    //history.push("/");
                 })
                 .catch(ex=> {
-                    console.log("Problem register-------------------->",ex);
                     Object.entries(ex.errors).forEach(([key, values]) => {
-                        console.log(key, values);
                         let message = '';
                         values.forEach(text=> message+=text+" ");
                         refFormik.current.setFieldError(key,message);
-                        //formData.append(key, value)
                     });
                     titleRef.current.scrollIntoView({ behavior: 'smooth' })
                     
-                    //setErrors( );
-                    
                 });
-            
-            //const result =  await dispatch(RegisterUser(formData));
-            //
         }
         catch (error) {
             console.log("Server is bad register from", errors);
