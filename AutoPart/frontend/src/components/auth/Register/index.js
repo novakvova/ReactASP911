@@ -1,5 +1,6 @@
 import React, {useRef} from 'react'
 import { Formik, Form } from 'formik';
+import { push } from "connected-react-router";
 //import { useHistory } from "react-router-dom";
 import MyTextInput from '../../common/MyTextInput';
 import validationFields from './validation';
@@ -25,8 +26,9 @@ const RegisterPage = () => {
     const dispatch = useDispatch();
     const { loading, errors } = useSelector(state => state.auth);
     const refFormik = useRef();
+    const titleRef = useRef();
 
-    const onSubmitHandler = async (values, {setErrors}) => {
+    const onSubmitHandler = async (values) => {
 
         console.log("errors", errors);
         try {
@@ -52,10 +54,28 @@ const RegisterPage = () => {
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => formData.append(key, value));
             console.log("setError");
-            await dispatch(RegisterUser(formData, setErrors));
+            dispatch(RegisterUser(formData))
+                .then(result => {
+                    dispatch(push("/"));
+                    //history.push("/");
+                })
+                .catch(ex=> {
+                    console.log("Problem register-------------------->",ex);
+                    Object.entries(ex.errors).forEach(([key, values]) => {
+                        console.log(key, values);
+                        let message = '';
+                        values.forEach(text=> message+=text+" ");
+                        refFormik.current.setFieldError(key,message);
+                        //formData.append(key, value)
+                    });
+                    titleRef.current.scrollIntoView({ behavior: 'smooth' })
+                    
+                    //setErrors( );
+                    
+                });
             
             //const result =  await dispatch(RegisterUser(formData));
-            //history.push("/");
+            //
         }
         catch (error) {
             console.log("Server is bad register from", errors);
@@ -66,7 +86,7 @@ const RegisterPage = () => {
         
         <div className="row">
             <div className="offset-md-3 col-md-6">
-                <h1 className="text-center">Реєстрація</h1>
+                <h1 ref={titleRef} className="text-center" >Реєстрація</h1>
                 <Formik
                     innerRef = {refFormik}
                     initialValues={initState}

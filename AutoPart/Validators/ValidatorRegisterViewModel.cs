@@ -20,7 +20,9 @@ namespace AutoPart.Validators
                .EmailAddress().WithMessage("Пошта є не коректною!")
                .DependentRules(() =>
                {
-                   RuleFor(x => x.Email).Must(BeUniqueEmail).WithName("Email").WithMessage("Дана пошта уже зареєстрована!");
+                   RuleFor(x => x.Email).Must(BeUniqueEmail)
+                    
+                    .WithMessage("Дана пошта уже зареєстрована!");
                });
            RuleFor(x => x.Password)
                .NotEmpty().WithName("Password").WithMessage("Поле пароль є обов'язковим!")

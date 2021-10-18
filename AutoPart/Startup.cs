@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -16,6 +15,8 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +24,7 @@ using System.Text;
 
 namespace AutoPart
 {
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -49,7 +51,14 @@ namespace AutoPart
                 .AddEntityFrameworkStores<AppEFContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options =>
+                    {
+                        options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                        options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                        options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                    });
+
 
             services.AddScoped<IJwtTokenService, JwtTokenService>();
 
@@ -81,8 +90,8 @@ namespace AutoPart
             });
 
 
-            services.AddFluentValidation(x =>
-                x.RegisterValidatorsFromAssemblyContaining<Startup>());
+            services.AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
+
 
             services.AddAutoMapper(typeof(AppMapProfile));
 
