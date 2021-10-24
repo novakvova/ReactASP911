@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, {useRef, useState} from 'react'
 import { Formik, Form } from 'formik';
 import { push } from "connected-react-router";
 //import { useHistory } from "react-router-dom";
@@ -27,6 +27,7 @@ const RegisterPage = () => {
     const { loading, errors } = useSelector(state => state.auth);
     const refFormik = useRef();
     const titleRef = useRef();
+    const [invalid, setInvalid] = useState([]);
 
     const onSubmitHandler = async (values) => {
 
@@ -44,6 +45,8 @@ const RegisterPage = () => {
                         values.forEach(text=> message+=text+" ");
                         refFormik.current.setFieldError(key,message);
                     });
+
+                    setInvalid(ex.errors.invalid);
                     titleRef.current.scrollIntoView({ behavior: 'smooth' })
                     
                 });
@@ -58,6 +61,21 @@ const RegisterPage = () => {
         <div className="row">
             <div className="offset-md-3 col-md-6">
                 <h1 ref={titleRef} className="text-center" >Реєстрація</h1>
+                {invalid &&
+                    <div className="alert alert-danger">
+                        <ul>
+                        {
+                            invalid.map((text, index) => {
+                                return (
+                                    <li key={index}>{text}</li>
+
+                                );
+                            })
+                        }
+                        </ul>
+                    </div>
+
+                }
                 <Formik
                     innerRef = {refFormik}
                     initialValues={initState}

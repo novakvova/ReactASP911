@@ -1,3 +1,4 @@
+using AutoPart.Abastract;
 using AutoPart.Mapper;
 using AutoPart.Services;
 using Data.AutoPart;
@@ -61,6 +62,7 @@ namespace AutoPart
 
 
             services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IUserService, UserService>();
 
             var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<String>("JwtKey")));
 
@@ -167,6 +169,8 @@ namespace AutoPart
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });
+
+            app.SeedData();
         }
     }
 }
