@@ -34,6 +34,7 @@ namespace AutoPart.Services
             var user = _mapper.Map<AppUser>(model);
             try
             {
+                //throw new Exception("asdfa");
                 if (model.Photo != null)
                 {
                     string randomFilename = Path.GetRandomFileName() +
@@ -85,7 +86,10 @@ namespace AutoPart.Services
             {
                 if (!string.IsNullOrEmpty(fileName))
                     File.Delete(fileName);
-                var result = await _userManager.DeleteAsync(user);
+                if (user.Id != 0)
+                {
+                    var result = await _userManager.DeleteAsync(user);
+                }
                 AccountError accountError = new AccountError();
                 accountError.Errors.Invalid.Add(ex.Message);
                 throw new AccountException(accountError);

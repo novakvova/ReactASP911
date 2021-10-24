@@ -61,7 +61,7 @@ const RegisterPage = () => {
         <div className="row">
             <div className="offset-md-3 col-md-6">
                 <h1 ref={titleRef} className="text-center" >Реєстрація</h1>
-                {invalid &&
+                {invalid && invalid.length>0 &&
                     <div className="alert alert-danger">
                         <ul>
                         {

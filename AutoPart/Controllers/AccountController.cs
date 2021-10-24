@@ -40,9 +40,9 @@ namespace AutoPart.Controllers
             {
                 return BadRequest(aex.AccountError);
             }
-            catch(Exception ex)
+            catch
             {
-                return BadRequest(new AccountError("Щось пішло не так! " + ex.Message));
+                return BadRequest(new AccountError("Щось пішло не так!"));
             }
         }
     }
