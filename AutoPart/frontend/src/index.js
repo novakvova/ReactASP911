@@ -8,8 +8,14 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import store, {history} from './store';
+import {authUser} from './actions/auth';
 
 //console.log("hello", history);
+const token = localStorage.authToken;
+
+if(token) {
+  store.dispatch(authUser(token));
+}
 
 ReactDOM.render(
     <Provider store={store}>

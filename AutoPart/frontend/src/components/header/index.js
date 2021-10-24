@@ -1,9 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../../actions/auth';
+import { push } from 'connected-react-router';
 
 const Header = () => {
+    
+    const dispatch = useDispatch();
+
     const {isAuth, username} = useSelector(redux => redux.auth);
+    const onClickLogout = (e) => {
+        e.preventDefault();
+        dispatch(logout());
+        dispatch(push("/"));
+    }
+
 
     //console.log("Auth user info ", isAuth);
     return (
@@ -35,7 +46,7 @@ const Header = () => {
                                 <Link className="nav-link" to="/profile">{username}</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/logout">Вихід</Link>
+                                <Link className="nav-link" to="/logout" onClick={onClickLogout}>Вихід</Link>
                             </li>
                         </ul>
                     }
