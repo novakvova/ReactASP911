@@ -1,10 +1,11 @@
 import { LOGIN, REGISTER, REGISTER_BEGIN, 
-    REGISTER_FAILED, LOGOUT } from "../constants/actionTypes";
+    REGISTER_FAILED, LOGOUT, SET_ROLE } from "../constants/actionTypes";
 
 const initialState ={
     isAuth: false,
     username: "",
-    loading: false
+    loading: false,
+    role: ''
 }
 
 const authReducer = (state = initialState, action) => {
@@ -39,6 +40,12 @@ const authReducer = (state = initialState, action) => {
         case LOGOUT: {
             return { 
                 isAuth: false
+            }
+        }
+        case SET_ROLE: {
+            return { 
+                ...state,
+                role: action.payload
             }
         }
         default: {

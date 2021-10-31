@@ -8,10 +8,10 @@ const AdminLayout = () => {
 
     const dispatch = useDispatch();
 
-    const {isAuth, username} = useSelector(redux => redux.auth);
+    const {isAuth, username, role} = useSelector(redux => redux.auth);
 
     return (
-        isAuth ?
+        isAuth && role=='admin' ?
         <Layout>
             <Suspense fallback={<div>Загрузка ...</div>}>
                 <Switch>

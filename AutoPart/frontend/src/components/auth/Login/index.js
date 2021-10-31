@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import { Formik, Form } from 'formik';
 import MyTextInput from '../../common/MyTextInput';
 import validationFields from './validation';
 import { useDispatch } from 'react-redux';
 import { LoginUser } from '../../../actions/auth';
+import jwt from 'jsonwebtoken';
+import { SET_ROLE } from '../../../constants/actionTypes';
+import { push } from 'connected-react-router';
 
 const LoginPage = () => {
 
@@ -19,18 +22,31 @@ const LoginPage = () => {
     const onSubmitHandler=(values) => {
         try {            
            
-            dispatch(LoginrUser(values))
+            dispatch(LoginUser(values))
                 .then(result => {
+                    const token = localStorage.authToken;
+                    
+                    if (token) {
+                        var user = jwt.decode(token);
+                        dispatch({type: SET_ROLE, payload: user.roles.toLowerCase()});
+                        console.log("roles: ", user.roles);
+                        if(user && user.roles.toLowerCase() == 'admin') 
+                        {
+                            dispatch(push("/admin"));
+                            return;
+                        }
+                    }
                     dispatch(push("/"));
                 })
-                .catch(ex=> {
+                .catch(ex => {
+                    console.log("exception: ", ex);
                     setInvalid(ex.errors.invalid);
                     titleRef.current.scrollIntoView({ behavior: 'smooth' })
                     
                 });
         }
         catch (error) {
-            console.log("Server is bad register from", errors);
+            console.log("Server is bad register from", error);
         }
     }
 
