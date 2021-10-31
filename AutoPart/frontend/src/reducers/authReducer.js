@@ -3,9 +3,8 @@ import { LOGIN, REGISTER, REGISTER_BEGIN,
 
 const initialState ={
     isAuth: false,
-    username: "",
-    loading: false,
-    role: ''
+    user: {},
+    loading: false
 }
 
 const authReducer = (state = initialState, action) => {
@@ -33,7 +32,7 @@ const authReducer = (state = initialState, action) => {
         case LOGIN: {
             return {
                 isAuth: true,
-                username: payload.name,
+                user: payload,
                 loading: false
             };
         } 

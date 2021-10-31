@@ -3,9 +3,8 @@ import { Formik, Form } from 'formik';
 import MyTextInput from '../../common/MyTextInput';
 import validationFields from './validation';
 import { useDispatch } from 'react-redux';
-import { LoginUser } from '../../../actions/auth';
+import { LoginUser, isRole } from '../../../actions/auth';
 import jwt from 'jsonwebtoken';
-import { SET_ROLE } from '../../../constants/actionTypes';
 import { push } from 'connected-react-router';
 
 const LoginPage = () => {
@@ -24,17 +23,10 @@ const LoginPage = () => {
            
             dispatch(LoginUser(values))
                 .then(result => {
-                    const token = localStorage.authToken;
-                    
-                    if (token) {
-                        var user = jwt.decode(token);
-                        dispatch({type: SET_ROLE, payload: user.roles.toLowerCase()});
-                        console.log("roles: ", user.roles);
-                        if(user && user.roles.toLowerCase() == 'admin') 
-                        {
-                            dispatch(push("/admin"));
-                            return;
-                        }
+                    let user = jwt.decode(result);
+                    if (isRole(user, 'admin')) {
+                        dispatch(push("/admin"));
+                        return;
                     }
                     dispatch(push("/"));
                 })

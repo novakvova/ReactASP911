@@ -41,7 +41,7 @@ export const LoginUser = (model) => async (dispatch) => {
         console.log("login reuslt", result);
         localStorage.authToken = token;
         dispatch(authUser(token));
-        return Promise.resolve(result);
+        return Promise.resolve(token);
         
     }
     catch(err) {
@@ -64,6 +64,20 @@ export const logout = () => (dispatch) => {
             type: LOGOUT
         }
     );
+}
+
+export const isRole = (user, role) => {
+    if(Array.isArray(user.roles)) {
+        for(let i =0; i < user.roles.length; i++)
+        {
+            if(user.roles[i]==role)
+                return true;
+        }
+        return false;
+    }
+    else {
+        return user.roles==role;
+    }
 }
 
 

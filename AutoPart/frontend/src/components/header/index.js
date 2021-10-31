@@ -8,7 +8,7 @@ const Header = () => {
     
     const dispatch = useDispatch();
 
-    const {isAuth, username} = useSelector(redux => redux.auth);
+    const {isAuth, user} = useSelector(redux => redux.auth);
     const onClickLogout = (e) => {
         e.preventDefault();
         dispatch(logout());
@@ -43,7 +43,7 @@ const Header = () => {
                         :
                         <ul className="navbar-nav">
                              <li className="nav-item">
-                                <Link className="nav-link" to="/profile">{username}</Link>
+                                <Link className="nav-link" to="/profile">{user.name}</Link>
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/logout" onClick={onClickLogout}>Вихід</Link>
