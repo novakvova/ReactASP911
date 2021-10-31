@@ -32,6 +32,24 @@ export const RegisterUser = (model) => async (dispatch) => {
     }
 }
 
+export const LoginUser = (model) => async (dispatch) => {
+
+    try {
+        dispatch({type: REGISTER_BEGIN});
+        const result = await authService.login(model);
+        const token = result.data.token;
+        console.log("login reuslt", result);
+        localStorage.authToken = token;
+        dispatch(authUser(token));
+        return Promise.resolve(result);
+        
+    }
+    catch(err) {
+        const {data} = err.response;
+        return Promise.reject(data);
+    }
+}
+
 export const authUser = (token) => (dispatch) => {
     var user = jwt.decode(token);
     setAuthorizationToken(token);
