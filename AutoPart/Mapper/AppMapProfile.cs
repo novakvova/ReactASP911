@@ -21,7 +21,6 @@ namespace AutoPart.Mapper
                .ForMember(x => x.Image, opt => opt.Ignore());
 
             CreateMap<ProductEntity, ProductItemViewModel>()
-               .ForMember(x => x.Code, opt => opt.MapFrom(x => Guid.NewGuid().ToString()))
                .ForMember(x => x.Description, opt => opt.MapFrom(x => "Product Description"))
                .ForMember(x => x.Image, opt => opt.MapFrom(x => @"\images\" + x.Image))
                .ForMember(x => x.Category, opt => opt.MapFrom(x => "Accessories"))

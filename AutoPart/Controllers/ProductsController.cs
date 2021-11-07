@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoPart.Controllers
@@ -65,6 +66,7 @@ namespace AutoPart.Controllers
         {
             try
             {
+                Thread.Sleep(2000);
                 var model = await _context.Products
                     .Select(x => _mapper.Map<ProductItemViewModel>(x)).ToListAsync();
                 return Ok(model);

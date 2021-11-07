@@ -1,15 +1,19 @@
 import React, {useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
-import { ProductService } from './ProductService';
 import { Rating } from 'primereact/rating';
 import './home.css';
+import { ListProduct } from '../../actions/products';
+import EclipseWidget from '../common/eclipse';
 
 
 const HomePage = () => {
 
-    const [products, setProducts] = useState(null);
+    const dispatch = useDispatch();
+    const { list } = useSelector(state => state.product);
+
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState(null);
     const [sortOrder, setSortOrder] = useState(null);
@@ -18,12 +22,23 @@ const HomePage = () => {
         {label: 'Price High to Low', value: '!price'},
         {label: 'Price Low to High', value: 'price'},
     ];
-
-    const productService = new ProductService();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        productService.list().then(responce => setProducts(responce.data));
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+        try {
+            dispatch(ListProduct())
+                .then(() => {
+                    setLoading(false);
+                })
+                .catch(ex => {
+                    setLoading(false);
+                });
+        }
+        catch (error) {
+            setLoading(false);
+            console.log("Server is bad register from", error);
+        } 
+    }, []);
 
 
     const onSortChange = (event) => {
@@ -117,11 +132,13 @@ const HomePage = () => {
         <>
             <div className="dataview-demo">
                 <div className="card">
-                    <DataView value={products} layout={layout} header={header}
+                    <DataView value={list} layout={layout} header={header}
                         itemTemplate={itemTemplate} paginator rows={9}
                         sortOrder={sortOrder} sortField={sortField} />
                 </div>
             </div>
+
+            {loading && <EclipseWidget/>}
         </>
     )
 }
