@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoPart.Models;
+using Data.AutoPart.Entities;
 using Data.AutoPart.Entities.Identity;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,12 @@ namespace AutoPart.Mapper
             CreateMap<RegisterViewModel, AppUser>()
                 .ForMember(x => x.Photo, opt => opt.Ignore())
                 .ForMember(x => x.UserName, opt => opt.MapFrom(x=>x.Email));
-            //.ForMember(x => x.Image, opt => opt.MapFrom(x => "images/"
-            //    + (string.IsNullOrEmpty(x.Photo) ? "noimage.jpg" : x.Photo)));
+
+            CreateMap<ProductAddViewModel, ProductEntity>()
+               .ForMember(x => x.Image, opt => opt.Ignore());
+
+            CreateMap<ProductEntity, ProductItemViewModel> ()
+               .ForMember(x => x.Image, opt => opt.MapFrom(x=> @"\images\"+x.Image));
         }
     }
 }

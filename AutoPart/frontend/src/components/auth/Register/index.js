@@ -24,10 +24,11 @@ const RegisterPage = () => {
     }
     //const history = useHistory();
     const dispatch = useDispatch();
-    const { loading, errors } = useSelector(state => state.auth);
+    const { errors } = useSelector(state => state.auth);
     const refFormik = useRef();
     const titleRef = useRef();
     const [invalid, setInvalid] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const onSubmitHandler = async (values) => {
 
@@ -35,11 +36,14 @@ const RegisterPage = () => {
         try {            
             const formData = new FormData();
             Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+            setLoading(true);
             dispatch(RegisterUser(formData))
                 .then(result => {
+                    setLoading(false);
                     dispatch(push("/"));
                 })
                 .catch(ex=> {
+                    setLoading(false);
                     Object.entries(ex.errors).forEach(([key, values]) => {
                         let message = '';
                         values.forEach(text=> message+=text+" ");
@@ -52,6 +56,7 @@ const RegisterPage = () => {
                 });
         }
         catch (error) {
+            setLoading(false);
             console.log("Server is bad register from", errors);
         }
     }

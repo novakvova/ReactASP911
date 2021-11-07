@@ -1,0 +1,81 @@
+﻿using AutoMapper;
+using AutoPart.Models;
+using Data.AutoPart;
+using Data.AutoPart.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AutoPart.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProductsController : ControllerBase
+    {
+        private readonly AppEFContext _context;
+        private readonly IMapper _mapper;
+        public ProductsController(AppEFContext context, 
+            IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+        [HttpPost]
+        [Route("add")]
+        public async Task<IActionResult> Add([FromForm] ProductAddViewModel model)
+        {
+            try
+            {
+                string fileName = String.Empty;
+                var product = _mapper.Map<ProductEntity>(model);
+
+                if (model.Image != null)
+                {
+                    string randomFilename = Path.GetRandomFileName() +
+                        Path.GetExtension(model.Image.FileName);
+
+                    string dirPath = Path.Combine(Directory.GetCurrentDirectory(), "images");
+                    fileName = Path.Combine(dirPath, randomFilename);
+                    using (var file = System.IO.File.Create(fileName))
+                    {
+                        model.Image.CopyTo(file);
+                    }
+                    product.Image = randomFilename;
+                }
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(new {
+                    invalid = ex.Message
+                });
+            }
+        }
+
+        [HttpGet]
+        [Route("list")]
+        public async Task<IActionResult> List()
+        {
+            try
+            {
+                var model = await _context.Products
+                    .Select(x => _mapper.Map<ProductItemViewModel>(x)).ToListAsync();
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    invalid = ex.Message
+                });
+            }
+        }
+    }
+}

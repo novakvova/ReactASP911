@@ -1,4 +1,5 @@
-﻿using Data.AutoPart.Entities.Identity;
+﻿using Data.AutoPart.Entities;
+using Data.AutoPart.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace Data.AutoPart
         {
 
         }
+        public DbSet<ProductEntity> Products { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
