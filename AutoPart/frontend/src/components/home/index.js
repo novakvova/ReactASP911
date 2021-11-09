@@ -40,6 +40,11 @@ const HomePage = () => {
         } 
     }, []);
 
+    const onClickAddToCart =(e, id) => {
+        e.preventDefault();
+        
+        console.log("Add to card", id);
+    }
 
     const onSortChange = (event) => {
         const value = event.value;
@@ -69,7 +74,7 @@ const HomePage = () => {
                     </div>
                     <div className="product-list-action">
                         <span className="product-price">{data.price} грн.</span>
-                        <Button icon="pi pi-shopping-cart" label="Add to Cart" disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        <Button icon="pi pi-shopping-cart" label="Add to Cart" onClick={(e)=>onClickAddToCart(e, data.id)} disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
                         <span className={`product-badge status-${data.inventoryStatus.toLowerCase()}`}>{data.inventoryStatus}</span>
                     </div>
                 </div>
@@ -96,7 +101,7 @@ const HomePage = () => {
                     </div>
                     <div className="product-grid-item-bottom">
                         <span className="product-price">{data.price} грн.</span>
-                        <Button icon="pi pi-shopping-cart" label="Add to Cart" disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
+                        <Button icon="pi pi-shopping-cart" label="Add to Cart" onClick={(e)=>onClickAddToCart(e, data.id)} disabled={data.inventoryStatus === 'OUTOFSTOCK'}></Button>
                     </div>
                 </div>
             </div>

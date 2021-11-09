@@ -63,7 +63,7 @@ namespace AutoPart.Services
                     throw new AccountException(accountError);
                 }
 
-                result = await _userManager.AddToRoleAsync(user, Roles.Admin);
+                result = await _userManager.AddToRoleAsync(user, Roles.User);
                 if (!result.Succeeded)
                 {
                     if (!string.IsNullOrEmpty(fileName))

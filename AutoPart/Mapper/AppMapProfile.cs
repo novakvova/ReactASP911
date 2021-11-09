@@ -27,6 +27,8 @@ namespace AutoPart.Mapper
                .ForMember(x => x.Quantity, opt => opt.MapFrom(x => 25))
                .ForMember(x => x.InventoryStatus, opt => opt.MapFrom(x => "INSTOCK"))
                .ForMember(x => x.Rating, opt => opt.MapFrom(x => 5));
+
+            CreateMap<CartAddViewModel, CartEntity>();
         }
     }
 }
