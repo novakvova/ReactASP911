@@ -6,6 +6,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Rating } from 'primereact/rating';
 import './home.css';
 import { ListProduct } from '../../actions/products';
+import { AddCartProduct } from '../../actions/cart';
 import EclipseWidget from '../common/eclipse';
 
 
@@ -42,8 +43,26 @@ const HomePage = () => {
 
     const onClickAddToCart =(e, id) => {
         e.preventDefault();
-        
+        dispatch(AddCartProduct())
         console.log("Add to card", id);
+
+        try {            
+            var data = {
+                productId: id,
+                quantity: 1
+            }
+            dispatch(AddCartProduct(data))
+                .then(() => {
+                    
+                    console.log("Add to cart competed!");
+                })
+                .catch(ex => {
+                });
+        }
+        catch (error) {
+            console.log("Server is bad register from", error);
+        }
+
     }
 
     const onSortChange = (event) => {

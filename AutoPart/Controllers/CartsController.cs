@@ -2,8 +2,10 @@
 using AutoPart.Models;
 using Data.AutoPart;
 using Data.AutoPart.Entities;
+using Data.AutoPart.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,12 +23,14 @@ namespace AutoPart.Controllers
     public class CartsController : ControllerBase
     {
         private readonly AppEFContext _context;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;
         public CartsController(AppEFContext context,
-            IMapper mapper)
+            IMapper mapper, UserManager<AppUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -36,10 +40,18 @@ namespace AutoPart.Controllers
             try
             {
                 string userName = User.FindFirst("name")?.Value;
+                var user = await _userManager.FindByNameAsync(userName);
                 var cart = _mapper.Map<CartEntity>(model);
+                cart.UserId = user.Id;
                 _context.Carts.Add(cart);
                 await _context.SaveChangesAsync();
-                return Ok();
+
+                var result = _context.Carts
+                    .Include(x=>x.Product)
+                    .Where(x=>x.Id==cart.Id)
+                    .Select(x=>_mapper.Map<CartItemViewModel>(x))
+                    .First();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -58,6 +70,7 @@ namespace AutoPart.Controllers
             {
                 Thread.Sleep(2000);
                 var model = await _context.Carts
+                    .Include(x => x.Product)
                     .Select(x => _mapper.Map<CartItemViewModel>(x)).ToListAsync();
                 return Ok(model);
             }

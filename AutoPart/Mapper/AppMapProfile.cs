@@ -33,7 +33,7 @@ namespace AutoPart.Mapper
             CreateMap<CartEntity, CartItemViewModel>()
                .ForMember(x => x.ProductName, opt => opt.MapFrom(x => x.Product.Name))
                .ForMember(x => x.ProductImage, opt => opt.MapFrom(x => @"\images\" + x.Product.Image))
-               .ForMember(x => x.ProductPrice, opt => opt.MapFrom(x => @"\images\" + x.Product.Price));
+               .ForMember(x => x.ProductPrice, opt => opt.MapFrom(x => x.Product.Price));
         }
     }
 }
