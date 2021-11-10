@@ -5,10 +5,12 @@ using Data.AutoPart.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AutoPart.Controllers
@@ -29,7 +31,7 @@ namespace AutoPart.Controllers
 
         [HttpPost]
         [Route("add")]
-        public async Task<IActionResult> Add([FromForm] CartAddViewModel model)
+        public async Task<IActionResult> Add([FromBody] CartAddViewModel model)
         {
             try
             {
@@ -48,6 +50,25 @@ namespace AutoPart.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("list")]
+        public async Task<IActionResult> List()
+        {
+            try
+            {
+                Thread.Sleep(2000);
+                var model = await _context.Carts
+                    .Select(x => _mapper.Map<CartItemViewModel>(x)).ToListAsync();
+                return Ok(model);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    invalid = ex.Message
+                });
+            }
+        }
 
     }
 }
