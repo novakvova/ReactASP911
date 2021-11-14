@@ -39,11 +39,21 @@ namespace AutoPart.Controllers
             try
             {
                 string userName = User.FindFirst("name")?.Value;
-                var user = await _userManager.FindByNameAsync(userName);
-                var cart = _mapper.Map<CartEntity>(model);
-                cart.UserId = user.Id;
-                _context.Carts.Add(cart);
-                await _context.SaveChangesAsync();
+                var user = await _userManager.FindByEmailAsync(userName);
+                var cart = _context.Carts
+                    .SingleOrDefault(x=>x.UserId==user.Id && x.ProductId==model.ProductId);
+                if (cart == null)
+                {
+                    cart = _mapper.Map<CartEntity>(model);
+                    cart.UserId = user.Id;
+                    _context.Carts.Add(cart);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    cart.Quantity += model.Quantity;
+                    _context.SaveChanges();
+                }
 
                 var result = _context.Carts
                     .Include(x => x.Product)

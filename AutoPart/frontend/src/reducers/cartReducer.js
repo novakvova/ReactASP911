@@ -9,9 +9,11 @@ const cartReducer = (state = initialState, action) => {
     const {type, payload} = action;
     switch(type) {
         case CART_ADD_PRODUCT: {
+
+            const list = state.list.filter(item => item.id !== payload.id);
             return {
                 ...state,
-                payload
+                list: [...list, payload]
             };
         } 
         default: {
