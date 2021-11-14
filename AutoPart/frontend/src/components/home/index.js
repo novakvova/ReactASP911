@@ -8,12 +8,17 @@ import './home.css';
 import { ListProduct } from '../../actions/products';
 import { AddCartProduct } from '../../actions/cart';
 import EclipseWidget from '../common/eclipse';
+import CartDialog from './cartDialog';
+import { Dialog } from 'primereact/dialog';
+
 
 
 const HomePage = () => {
 
     const dispatch = useDispatch();
     const { list } = useSelector(state => state.product);
+
+    const[visible,setVisible]=useState(false);
 
     const [layout, setLayout] = useState('grid');
     const [sortKey, setSortKey] = useState(null);
@@ -52,7 +57,7 @@ const HomePage = () => {
             }
             dispatch(AddCartProduct(data))
                 .then(() => {
-                    
+                    setVisible(true);
                     console.log("Add to cart competed!");
                 })
                 .catch(ex => {
@@ -149,10 +154,21 @@ const HomePage = () => {
             </div>
         );
     }
+
     const header = renderHeader();
 
     return (
         <>
+            <Dialog
+                header='Dialog'
+                visible={visible}
+                style={{ width: '50vw' }}
+                modal={true}
+                onHide={() => setVisible(false)}
+                maximizable={false}>
+                <CartDialog />
+            </Dialog>
+
             <div className="dataview-demo">
                 <div className="card">
                     <DataView value={list} layout={layout} header={header}

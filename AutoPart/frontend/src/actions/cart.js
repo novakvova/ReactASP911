@@ -1,5 +1,5 @@
 import cartService from "../services/cart.service";
-import { CART_ADD_PRODUCT } from "../constants/actionTypes";
+import { CART_ADD_PRODUCT, CART_LOAD_PRODUCT } from "../constants/actionTypes";
 
 export const AddCartProduct = (product) => async (dispatch) => {
     try {
@@ -19,4 +19,10 @@ export const AddCartProduct = (product) => async (dispatch) => {
         const {data} = err.response;
         return Promise.reject(data);
     }
+}
+
+
+export const getCartUser = () => async (dispatch) => {
+    const {data} = await cartService.list();
+    dispatch({type: CART_LOAD_PRODUCT, payload: data});
 }
