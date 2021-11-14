@@ -58,6 +58,7 @@ namespace AutoPart
                         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                         options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
                         options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                        //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     });
 
 
