@@ -1,5 +1,6 @@
 using AutoPart.Abastract;
 using AutoPart.Mapper;
+using AutoPart.Models;
 using AutoPart.Services;
 using Data.AutoPart;
 using Data.AutoPart.Entities.Identity;
@@ -63,6 +64,14 @@ namespace AutoPart
 
             services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IUserService, UserService>();
+
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+
+            services.AddSingleton(emailConfig);
+
+            services.AddScoped<IEmailSender, EmailSender>();
 
             var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<String>("JwtKey")));
 

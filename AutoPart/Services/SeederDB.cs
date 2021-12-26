@@ -1,4 +1,6 @@
-﻿using AutoPart.Constants;
+﻿using AutoPart.Abastract;
+using AutoPart.Constants;
+using AutoPart.Models;
 using Data.AutoPart.Entities.Identity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -17,8 +19,25 @@ namespace AutoPart.Services
 
             using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
+                try
+                {
+                    var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
+
+                    var message = new Message(new string[] { "novakvova@gmail.com" },
+                            "Start kotelshop.tk",
+                            $"Сайт успішно звпущено: " +
+                            $"<a href='http://kotelshop.tk'>Сайт</a>");
+
+                    emailSender.SendEmail(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
                 var manager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
                 var managerRole = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+                
                 var result = managerRole.CreateAsync(new AppRole
                 {
                     Name = Roles.Admin
