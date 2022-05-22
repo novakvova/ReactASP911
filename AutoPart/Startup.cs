@@ -2,6 +2,7 @@ using AutoPart.Abastract;
 using AutoPart.Mapper;
 using AutoPart.Models;
 using AutoPart.Services;
+using AutoPart.Settings;
 using Data.AutoPart;
 using Data.AutoPart.Entities.Identity;
 using FluentValidation.AspNetCore;
@@ -70,6 +71,12 @@ namespace AutoPart
                 .Get<EmailConfiguration>();
 
             services.AddSingleton(emailConfig);
+
+            var googleAuthSettings = Configuration
+                .GetSection("GoogleAuthSettings")
+                .Get<GoogleAuthSettings>();
+
+            services.AddSingleton(googleAuthSettings);
 
             services.AddScoped<IEmailSender, EmailSender>();
 

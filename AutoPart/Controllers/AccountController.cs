@@ -2,6 +2,7 @@
 using AutoPart.Abastract;
 using AutoPart.Constants;
 using AutoPart.Exceptions;
+using AutoPart.Helpers;
 using AutoPart.Models;
 using AutoPart.Services;
 using Data.AutoPart.Entities.Identity;
@@ -82,6 +83,48 @@ namespace AutoPart.Controllers
             {
                 return BadRequest(new AccountError("Щось пішло не так!"));
             }
+        }
+
+        [HttpPost("GoogleExternalLogin")]
+        public async Task<IActionResult> GoogleExternalLoginAsync([FromBody] ExternalLoginRequest request)
+        {
+            var payload = await _tokenService.VerifyGoogleToken(request);
+            if (payload == null)
+            {
+                return BadRequest(new AccountError("Щось пішло не так!"));
+            }
+            var info = new UserLoginInfo(request.Provider, payload.Subject, request.Provider);
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.Email);
+
+                if (user == null)
+                {
+                    user = new AppUser
+                    {
+                        Email = payload.Email,
+                        UserName = payload.Email,
+                        FirstName = payload.GivenName,
+                        SecondName = payload.FamilyName
+                    };
+                    var resultCreate = await _userManager.CreateAsync(user);
+                    if (!resultCreate.Succeeded)
+                    {
+                        return BadRequest(new AccountError("Щось пішло не так!"));
+                    }
+
+                }
+
+                var resultAddLogin = await _userManager.AddLoginAsync(user, info);
+                if (!resultAddLogin.Succeeded)
+                {
+                    return BadRequest(new AccountError("Щось пішло не так!"));
+                }
+            }
+            
+            return Ok(_tokenService.CreateToken(user));
         }
     }
 }

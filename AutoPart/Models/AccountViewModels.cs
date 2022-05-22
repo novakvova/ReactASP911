@@ -44,4 +44,10 @@ namespace AutoPart.Models
         }
         public List<string> Invalid { get; set; }
     }
+
+    public class ExternalLoginRequest
+    {
+        public string Provider { get; set; }
+        public string Token { get; set; }
+    }
 }

@@ -1,4 +1,7 @@
-﻿using Data.AutoPart.Entities.Identity;
+﻿using AutoPart.Models;
+using AutoPart.Settings;
+using Data.AutoPart.Entities.Identity;
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -15,18 +18,22 @@ namespace AutoPart.Services
     public interface IJwtTokenService
     {
         string CreateToken(AppUser user);
+        Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginRequest request);
     }
 
     public class JwtTokenService : IJwtTokenService
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<AppUser> _userManager;
+        private readonly GoogleAuthSettings _googleAuthSettings;
 
         public JwtTokenService(IConfiguration configuration,
+            GoogleAuthSettings googleAuthSettings,
             UserManager<AppUser> userManager)
         {
             _configuration = configuration;
             _userManager = userManager;
+            _googleAuthSettings = googleAuthSettings;
         }
 
         public string CreateToken(AppUser user)
@@ -52,6 +59,17 @@ namespace AutoPart.Services
                 claims: claims
             );
             return new JwtSecurityTokenHandler().WriteToken(jwt);
+        }
+
+        public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalLoginRequest request)
+        {
+            var settings = new GoogleJsonWebSignature.ValidationSettings()
+            {
+                Audience = new List<string>() { _googleAuthSettings.ClientId }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(request.Token, settings);
+            return payload;
         }
     }
 }
