@@ -10,6 +10,7 @@ import { AddCartProduct } from '../../actions/cart';
 import EclipseWidget from '../common/eclipse';
 import CartDialog from './cartDialog';
 import { Dialog } from 'primereact/dialog';
+import axios from 'axios';
 
 
 
@@ -32,6 +33,8 @@ const HomePage = () => {
 
     useEffect(() => {
         try {
+            axios.get("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+                .then(res => console.log("Валюта", res.data));
             dispatch(ListProduct())
                 .then(() => {
                     setLoading(false);
