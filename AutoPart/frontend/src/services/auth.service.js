@@ -18,6 +18,14 @@ class AuthService {
             }
         });
     }
+
+    googleLogin(data) {
+        return http.post("api/account/GoogleExternalLogin", data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    }
 }
 
 export default new AuthService();

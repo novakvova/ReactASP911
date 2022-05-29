@@ -50,6 +50,22 @@ export const LoginUser = (model) => async (dispatch) => {
     }
 }
 
+export const GoogleLoginUser = (model) => async (dispatch) => {
+
+    try {
+        const result = await authService.googleLogin(model);
+        const token = result.data.token;
+        console.log("login reuslt", result);
+        localStorage.authToken = token;
+        dispatch(authUser(token));
+        return Promise.resolve(token);
+    }
+    catch(err) {
+        const {data} = err.response;
+        return Promise.reject(data);
+    }
+}
+
 export const authUser = (token) => (dispatch) => {
     var user = jwt.decode(token);
     setAuthorizationToken(token);

@@ -4,6 +4,7 @@ using Data.AutoPart;
 using Data.AutoPart.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,23 @@ namespace AutoPart.Controllers
                     invalid = ex.Message
                 });
             }
+        }
+
+        [HttpGet]
+        [Route("getfile/{name}")]
+        public IActionResult DownloadFile([FromRoute]string name)
+        {
+            //Зробити перевірку доступа
+
+            //Determine the Content Type of the File.
+            string contentType = "";
+            string file = Directory.GetCurrentDirectory() +
+                $"/data/{name}";
+
+            new FileExtensionContentTypeProvider()
+                .TryGetContentType(file, out contentType);
+
+            return new PhysicalFileResult(file, contentType);
         }
     }
 }

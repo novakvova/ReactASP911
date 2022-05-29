@@ -114,7 +114,6 @@ namespace AutoPart.Controllers
                     {
                         return BadRequest(new AccountError("Щось пішло не так!"));
                     }
-
                 }
 
                 var resultAddLogin = await _userManager.AddLoginAsync(user, info);
@@ -123,8 +122,11 @@ namespace AutoPart.Controllers
                     return BadRequest(new AccountError("Щось пішло не так!"));
                 }
             }
-            
-            return Ok(_tokenService.CreateToken(user));
+
+            string token = _tokenService.CreateToken(user);
+            return Ok(
+                new { token }
+            );
         }
     }
 }
